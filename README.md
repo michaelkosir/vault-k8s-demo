@@ -6,6 +6,7 @@ This repository provides a demo of HashiCorp Vault on Kubernetes.
 ### Requirements
 - docker
 - kind
+- kubectl
 - helm
 
 ### Terraform
