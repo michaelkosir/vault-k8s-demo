@@ -1,0 +1,48 @@
+injector:
+  enabled: false
+
+server:
+  logLevel: warn
+  logFormat: json
+
+  image:
+    tag: "1.18"
+
+  standalone:
+    enabled: false
+
+  ha:
+    enabled: true
+    raft:
+      enabled: true
+      config: |
+        ui = true
+
+        listener "tcp" {
+          tls_disable = 1
+          address = "[::]:8200"
+          cluster_address = "[::]:8201"
+        }
+
+        storage "raft" {
+          path = "/vault/data"
+          retry_join {
+            leader_api_addr = "http://vault-active:8200"
+          }
+          retry_join {
+            leader_api_addr = "http://vault-standby:8200"
+          }
+        }
+
+        # seal "awskms" {
+        #   region     = "us-east-2"
+        #   kms_key_id = "alias/hashicorp-vault-auto-unseal-use2"
+        # }
+
+        # telemetry {
+        #   statsd_address        = "127.0.0.1:8125"
+        #   disable_hostname      = true
+        #   enable_hostname_label = true
+        # }
+
+        service_registration "kubernetes" {}
